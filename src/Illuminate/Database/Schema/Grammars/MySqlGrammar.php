@@ -466,6 +466,17 @@ class MySqlGrammar extends Grammar {
 	}
 
 	/**
+	 * Create the column definition for a long binary type.
+	 *
+	 * @param  \Illuminate\Support\Fluent  $column
+	 * @return string
+	 */
+	protected function typeLongBinary(Fluent $column)
+	{
+		return 'longblob';
+	}
+
+	/**
 	 * Get the SQL for an unsigned column modifier.
 	 *
 	 * @param  \Illuminate\Database\Schema\Blueprint  $blueprint

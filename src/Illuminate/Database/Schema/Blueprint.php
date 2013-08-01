@@ -605,6 +605,17 @@ class Blueprint {
 	}
 
 	/**
+	 * Create a new long binary column on the table.
+	 *
+	 * @param  string  $column
+	 * @return \Illuminate\Support\Fluent
+	 */
+	public function longBinary($column)
+	{
+		return $this->addColumn('longBinary', $column);
+	}
+
+	/**
 	 * Add the proper columns for a polymorphic table.
 	 *
 	 * @param  string  $name
