@@ -88,12 +88,14 @@ class Str {
 	{
 		if ($pattern == $value) return true;
 
+		$pattern = preg_quote($pattern, '#');
+
 		// Asterisks are translated into zero-or-more regular expression wildcards
 		// to make it convenient to check if the strings starts with the given
 		// pattern such as "library/*", making any string check convenient.
 		if ($pattern !== '/')
 		{
-			$pattern = str_replace('*', '(.*)', $pattern).'\z';
+			$pattern = str_replace('\*', '.*', $pattern).'\z';
 		}
 		else
 		{
@@ -160,6 +162,18 @@ class Str {
 	}
 
 	/**
+	 * Parse a Class@method style callback into class and method.
+	 *
+	 * @param  string  $callback
+	 * @param  string  $default
+	 * @return array
+	 */
+	public static function parseCallback($callback, $default)
+	{
+		return static::contains($callback, '@') ? explode('@', $callback, 2) : array($callback, $default);
+	}
+
+	/**
 	 * Get the plural form of an English word.
 	 *
 	 * @param  string  $value
@@ -221,6 +235,17 @@ class Str {
 	}
 
 	/**
+	 * Convert the given string to title case.
+	 *
+	 * @param  string  $value
+	 * @return string
+	 */
+	public static function title($value)
+	{
+		return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
+	}
+
+	/**
 	 * Get the singular form of an English word.
 	 *
 	 * @param  string  $value
@@ -242,13 +267,13 @@ class Str {
 	{
 		$title = static::ascii($title);
 
-		// Remove all characters that are not the separator, letters, numbers, or whitespace.
-		$title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', mb_strtolower($title));
-
 		// Convert all dashes/undescores into separator
 		$flip = $separator == '-' ? '_' : '-';
 
 		$title = preg_replace('!['.preg_quote($flip).']+!u', $separator, $title);
+
+		// Remove all characters that are not the separator, letters, numbers, or whitespace.
+		$title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', mb_strtolower($title));
 
 		// Replace all separator characters and whitespace by a single separator
 		$title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $title);
